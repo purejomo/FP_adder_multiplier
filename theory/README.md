@@ -92,3 +92,33 @@ Both Adder and Multiplier must handle these cases **before** the main pipeline o
     - Mul: Inf * Normal = Inf. (Inf * 0 = NaN).
 3.  **Zero**:
     - Mul: Anything * 0 = 0 (except NaN/Inf).
+
+---
+
+## 5. MAC Unit (Multiply-Accumulate) Architecture
+The MAC unit performs the fundamental operation $R = (A \times B) + C$. This operation is critical for matrix multiplications, convolutions, and dot products commonly found in Digital Signal Processing (DSP) and Deep Learning applications.
+
+### Discrete vs. Fused MAC
+- **Discrete MAC**: Performs multiplication, rounds the result, and then adds it to the accumulator.
+  - $R = \text{Round}(\text{Round}(A \times B) + C)$
+- **Fused Multiply-Add (FMA)**: Performs multiplication and addition as a single operation with only **one final rounding step**. This provides higher precision (less rounding error).
+  - $R = \text{Round}((A \times B) + C)$
+
+### Core Architecture Flow:
+
+### Step 1: Multiplication (Partial Product Generation)
+- Calculate $P = A \times B$ similar to the standard FP Multiplier.
+- Compute Sign, Exponent, and unnormalized Mantissa product ($M_a \times M_b$).
+
+### Step 2: Alignment with Addend (C)
+- Compare the exponent of the product ($E_p$) with the exponent of the addend ($E_c$).
+- Align the mantissa of the smaller number to match the larger exponent.
+- This often requires a wide shifter (since the product mantissa is typically wider than the addend mantissa before rounding).
+
+### Step 3: Addition
+- Add the aligned mantissas.
+
+### Step 4: Normalization & Rounding
+- Normalize the result (shift left to find leading 1).
+- Perform rounding (e.g., Nearest to Even) only distinctively at this final stage for FMA.
+- Check for Overflow/Underflow exceptions.
