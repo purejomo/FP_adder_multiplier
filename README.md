@@ -20,17 +20,39 @@ The design has been verified using **Xilinx Vivado**, confirming that it meets a
   - `source_1/new/`: Synthesizable Verilog source code (e.g., `fpadder.v`).
   - `sim_1/`: Simulation testbenches for verifying logical correctness.
 
-## Getting Started
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/ghlee/FP_adder_multiplier.git
-   ```
-2. **Open in Vivado**:
-   - Launch Xilinx Vivado and open the project located in the `Vivado/` directory.
+## Usage
+
+### C++ Reference Model
+The `Reference/` directory contains C++ models for bit-true verification.
+
+```bash
+cd Reference/Using_CPP
+
+# Compile and run Adder reference
+g++ fp16_adder_ref.cpp -o fp16_adder_ref
+./fp16_adder_ref
+
+# Compile and run Multiplier reference
+g++ fp16_mul_ref.cpp -o fp16_mul_ref
+./fp16_mul_ref
+```
+
+### RTL Implementation (Vivado)
+The `Vivado/` directory contains source code (`source_1`) and testbenches (`sim_1`). It does not contain a pre-built Vivado project file (`.xpr`).
+
+1. **Create a New Project**:
+   - Launch **Xilinx Vivado** and create a new RTL project.
+   - Target Part: **Zynq UltraScale+ ZCU102** (or your specific FPGA).
+
+2. **Add Source Files**:
+   - Add design files from `Vivado/source_1/new/`.
+   - Add simulation files from `Vivado/sim_1/new/`.
+
 3. **Run Simulation**:
-   - Execute the testbenches in `sim_1` to verify the functional correctness of the adder and multiplier.
-4. **Implementation**:
-   - Run Synthesis and Implementation to verify the **250MHz** timing constraints.
+   - Run Behavioral Simulation to verify correctness against the C++ model.
+
+4. **Synthesis & Implementation**:
+   - Run Synthesis and Implementation to validate timing constraints (**250MHz**).
 
 ## Status
 - [x] FP16 Adder Design
